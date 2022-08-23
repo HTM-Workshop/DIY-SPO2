@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1129</width>
+    <height>568</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1129</width>
+    <height>568</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1129</width>
+    <height>568</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>SPO2 Monitor</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="PlotWidget" name="graph" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>471</width>
+      <height>451</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>10</y>
+      <width>301</width>
+      <height>451</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>R Value Instantaneous</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLCDNumber" name="lcd_r">
+       <property name="minimumSize">
+        <size>
+         <width>299</width>
+         <height>78</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>R Value Average</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLCDNumber" name="lcd_r_avg">
+       <property name="minimumSize">
+        <size>
+         <width>299</width>
+         <height>78</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Approximate SPO2 (%)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLCDNumber" name="lcd_spo2">
+       <property name="minimumSize">
+        <size>
+         <width>299</width>
+         <height>78</height>
+        </size>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>2</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Heart Rate (BPM)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLCDNumber" name="lcd_heart">
+       <property name="minimumSize">
+        <size>
+         <width>299</width>
+         <height>78</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>480</y>
+      <width>551</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QComboBox" name="port_combo_box"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_refresh">
+       <property name="minimumSize">
+        <size>
+         <width>115</width>
+         <height>27</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>115</width>
+         <height>27</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Refresh</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_connect">
+       <property name="minimumSize">
+        <size>
+         <width>116</width>
+         <height>27</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>116</width>
+         <height>27</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Connect</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>460</y>
+      <width>67</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Device:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_capture">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>480</y>
+      <width>221</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Capture</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>10</y>
+      <width>321</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SPO2/R Calibration Coefficients</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_update">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>230</y>
+      <width>71</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Update</string>
+    </property>
+   </widget>
+   <widget class="PlotWidget" name="graph_2" native="true">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>300</y>
+      <width>321</width>
+      <height>231</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>280</y>
+      <width>321</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SPO2/R Curve</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>30</y>
+      <width>311</width>
+      <height>192</height>
+     </rect>
+    </property>
+    <property name="rowCount">
+     <number>0</number>
+    </property>
+    <property name="columnCount">
+     <number>2</number>
+    </property>
+    <attribute name="horizontalHeaderCascadingSectionResizes">
+     <bool>false</bool>
+    </attribute>
+    <column>
+     <property name="text">
+      <string>R Value</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>SPO2</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QPushButton" name="button_add_row">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>230</y>
+      <width>31</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Loma</family>
+      <pointsize>18</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>+</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_save">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>230</y>
+      <width>71</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_reload">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>230</y>
+      <width>71</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reload</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QWidget</extends>
+   <header>pyqtgraph</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
