@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #
-#           SPO2 Viewer
+#            ECG Viewer
 #   Written by Kevin Williams - 2022
 #
 #  This program is free software; you can redistribute it and/or modify
@@ -18,36 +18,17 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 
-import sys
 import logging
-from PyQt5 import QtWidgets, uic, QtCore, QtWidgets
+from typing import Callable
 
-# local includes
-import log_system
-from spo2 import SPO2
-from resource_path import resource_path
+def debug_timer(func: Callable) -> Callable:
+    """Debug timer decorator. Outputs to console."""
+    def timer(*args):
+        from time import time
+        init_time = time()
+        ret = func(*args)
+        total_time = time() - init_time
+        logging.debug(f"TIMER: {func.__name__} : {total_time}")
+        return ret
+    return timer
 
-VERSION = "0.0.1"
-LOG_LEVEL = logging.DEBUG
-
-class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
-
-        # Create SPO2 object
-        self._spo2 = SPO2('cal.json')
-
-        # Load the UI Page
-        uic.loadUi(resource_path('spo2_window.ui'), self)
-
-
-def main():
-    log_system.init_logging(LOG_LEVEL)
-    app = QtWidgets.QApplication(sys.argv)
-    main = MainWindow()
-    main.show()
-    sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()

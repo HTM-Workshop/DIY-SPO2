@@ -1,153 +1,242 @@
+#           SPO2 Viewer
+#   Written by Kevin Williams - 2022
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+
+import json
+import math
+import numba
+import numpy as np
+import logging
 import statistics as stat
-import math, numpy, pickle
+from scipy import signal
 
-class SPO2:
-    def __init__(self):
-        self.r_value_history_max = 100
-        self.r_value_history = [0] * self.r_value_history_max
-        self.raw_red = list()
-        self.raw_ir  = list()
-        self.rms_red = 0.0
-        self.rms_ir  = 0.0
-        self.r_value = 0.0
-        self.max_readings = 80
-        self.heart_rate = 0.0
-        self.default_calb_r    = [0.4, 0.85, 0.98, 1.1, 10]
-        self.default_calb_spo2 = [100, 97, 96, 95, 0]
-        self.calb_r = list()
-        self.calb_spo2 = list()
+# local includes
+from debug import debug_timer
+from resource_path import resource_path
 
-        # load saved calibration 
-        self.load_file()
-    def add_reading(self, list_in):
-        self.raw_red.append(list_in[0])
-        self.raw_ir.append(list_in[1])
-        if(len(self.raw_red) > self.max_readings):
-            self.raw_red.pop(0)
-            self.raw_ir.pop(0)
-    def update_rms(self):
-        try:
-            self.rms_red = calc_rms(self.raw_red)
-            self.rms_ir  = calc_rms(self.raw_ir)
-        except:
-            pass
-    def calc_r(self):
-        red_mean = stat.mean(self.raw_red)
-        ir_mean  = stat.mean(self.raw_ir)
-        norm_red = list()
-        norm_ir  = list()
-        for i in self.raw_red:
-            norm_red.append(i - red_mean)
-        for i in self.raw_ir:
-            norm_ir.append(i - ir_mean)
-        self.rms_red = calc_rms(norm_red)
-        self.rms_ir  = calc_rms(norm_ir)
-        self.r_value = (self.rms_red / self.rms_ir)
-        self.r_value_history.append(self.r_value)
-        self.r_value_history.pop(0)
-    def calc_r_avg(self):
-        val = sum(self.r_value_history) 
-        return val / self.r_value_history_max
-    def reset(self):
-        self.raw_red = list()
-        self.raw_ir  = list()
-
-    # This algorithm is a bit screwy. It tries to find two consecutive peaks in the 
-    # recorded data and calculate the time difference between them. Problem is that 
-    # the noisy signal fools the algorithm pretty easily, causing it to give bad values
-    # A "peak" is defined as three consecutive data points that have been increasing
-    # in value:  i.e.  A < B < C
-    def detect_heart_rate(self, rate):
-        history = [999, 999, 999]
-        start_point = 0
-
-        # The minimum delta between the datapoints in order to accept the peak
-        min_variation = 0.5
-        
-        # first pass, find first peak and ignore it
-        # necessary as it may begin this algorithm in the middle of a heart beat
-        # and get bad values
-        for i, v in enumerate(self.raw_ir):
-            history.append(v)
-            history.pop(0)
-            if(is_list_rising(history)):
-                if((history[2] - history[0]) > min_variation):
-                    start_point = i
-                    print("START: " + str(i) + ", " + str(v))
-                    break
-
-        # second pass, find first "real" peak
-        history = [999, 999, 999]
-        for i, v in enumerate(self.raw_ir[start_point + 1:]):
-            history.append(v)
-            history.pop(0)
-            if(is_list_rising(history)):
-                if((history[2] - history[0]) > min_variation):
-                    point1 = i + start_point
-                    print("Point 1: " + str(point1) + ", " + str(v))
-                    break
-
-        # final pass, find second peak
-        history = [999, 999, 999]
-        for i, v in enumerate(self.raw_ir[point1 + 1:]):
-            history.append(v)
-            history.pop(0)
-            if(is_list_rising(history)):
-                if((history[2] - history[0]) > min_variation):
-                    point2 = i + point1
-                    print("Point 2: " + str(point2) + ", " + str(v))
-                    break
-
-        # if either point has failed, skip calculation
-        if(point1 == 0 or point2 == 0):
-            return False
-        else:
-            self.heart_rate = 1 / ((point2 - point1) * rate)
-            self.heart_rate = self.heart_rate * 60 * 1000
-            print("CALCUALTED RATE: " + str(self.heart_rate))
-    def dump_all(self):
-        print(self.raw_red)
-        print(self.raw_ir)
-    def set_cal(r_list, spo2_list):
-        assert(len(r_list) == len(spo2_list))
-        self.calb_r    = r_list
-        self.calb_spo2 = spo2_list 
-
-    # call set_cal() method to set calibration coefficients before calling this
-    def calc_spo2(self):
-        sp = numpy.interp(self.calc_r_avg(), self.calb_r, self.calb_spo2)
-        return round(sp)
-    def load_file(self):
-        try:
-            f = open('r_curve.pkl', 'rb')
-            self.calb_r = pickle.load(f)
-            self.calb_spo2 = pickle.load(f)
-            f.close()
-        except:
-            self.calb_r = self.default_calb_r
-            self.calb_spo2 = self.default_calb_spo2
-            f = open('r_curve.pkl', 'wb')
-            pickle.dump(self.calb_r, f)
-            pickle.dump(self.calb_spo2, f)
-            f.flush()
-            f.close()
-    def save_file(self):
-        f = open('r_curve.pkl', 'wb')
-        pickle.dump(self.calb_r, f)
-        pickle.dump(self.calb_spo2, f)
-        f.flush()
-        f.close()
-
-
-def is_list_rising(list_in):
-    if(list_in[0] < list_in[1] and list_in[1] < list_in[2]):
-        return True
-    else:
-        return False
-
+@numba.jit
 def calc_rms(list_in):
     total = 0
     for i in list_in:
         total = total + (i ** 2)
     total = total / len(list_in)
     return math.sqrt(total)
+
+class SPO2:
+    def __init__(self, cal_file: str, max_readings: int = 80):
+
+        self._r_value_history_max = 100
+
+        # peak detection parameters
+        self.pk_prominence: int = 50
+        self.pk_holdoff: int = 50
+        
+        # default calibration tables
+        self._default_cal_r: list = [0.4, 0.85, 0.98, 1.1, 10]
+        self._default_cal_spo2: list = [100, 97, 96, 95, 0]
+
+        # calibration tables
+        self._cal_r: list = self._default_cal_r
+        self._cal_spo2: list = self._default_cal_spo2
+
+        # qualified calibration file path
+        self._cal_file_path = resource_path(cal_file)
+        self._load_cal_file(self._cal_file_path)
+
+        # initialize the data storage and result variables
+        self._max_readings: int = max_readings
+        self.reset()
+    
+    ### Properties and Setters
+    @property
+    def heart_rate_inst(self) -> float:
+        return self._heart_rate_inst
+    @property
+    def rms_red(self) -> float:
+        return self._rms_red
+    @property
+    def rms_ir(self) -> float:
+        return self._rms_ir
+    @property
+    def r_inst(self) -> float:
+        return self._r_value
+    @property
+    def r_average(self) -> float:
+        return np.average(self._r_value_history)
+    @property
+    def spo2(self) -> float:
+        return np.interp(self.r_average, self._cal_r, self._cal_spo2)
+    @property
+    def heart_rate(self) -> float:
+        return self._heart_rate_inst
+    
+    # accessors for graph data
+    @property
+    def history_ir(self) -> tuple:
+        return tuple(self._raw_ir)
+    @property
+    def history_red(self) -> tuple:
+        return tuple(self._raw_red)
+    
+    # accessors and setters for calibration table
+    @property
+    def cal_table_r(self) -> tuple:
+        return tuple(self._cal_r)
+    @cal_table_r.setter
+    def cal_table_r(self, data: list) -> None:
+        if not any(i < 0 for i in data):
+            self._cal_r = data
+        else:
+            raise ValueError(f"R calibration values can't be negative. {data}")
+    @property
+    def cal_table_spo2(self) -> tuple:
+        return tuple(self._cal_spo2)
+    @cal_table_spo2.setter
+    def cal_table_spo2(self, data: list) -> None:
+        if not any(math.floor(i) not in range(0, 101) for i in data):
+            self._cal_spo2 = data
+        else:
+            raise ValueError(f"All SPO2 values must be between 0-100. {data}")
+
+
+    ### External Methods
+    def add_data(self, data: tuple[float, float], time: float) -> None:
+        """
+        Add a raw datapoint to the RED, IR, and Time tables. 
+        Data tuple is defined as: tuple(red, ir). 
+        Automatically updates R, SPO2, and heartrate at the end of a capture period.
+        """
+
+        self._raw_red[self._data_index] = data[0]
+        self._raw_ir[self._data_index] = data[1]
+        self._raw_time[self._data_index] = time
+        self._data_index = (self._data_index + 1) % self._max_readings
+        if self._data_index == 0:
+            self._calc_r()
+            self._calc_hr()
+
+    def reset(self) -> None:
+        """Resets all data storage values and calculation results."""
+        self._peaks: list = []
+        self._rms_red: float = 0.0
+        self._rms_ir: float = 0.0
+        self._r_value: float = 0.0
+        self._heart_rate_inst: float = 0.0
+        self._r_value_history = [0] * self._r_value_history_max
+        self._raw_red: np.ndarray = np.zeros(self._max_readings)
+        self._raw_ir: np.ndarray = np.zeros(self._max_readings)
+        self._raw_time: np.ndarray = np.zeros(self._max_readings)
+        self._heart_rate_history: list = [0] * 3
+        self._data_index = 0   
+    
+
+    ### Internal methods
+    @numba.jit
+    def _calc_r(self) -> None:
+        """
+        Update the instantaneous R value and channel RMS. 
+        Stores to R value history.
+        """
+
+        red_mean = stat.mean(self.raw_red)
+        ir_mean  = stat.mean(self.raw_ir)
+        norm_red = []
+        norm_ir  = []
+        for i in self.raw_red:
+            norm_red.append(i - red_mean)
+        for i in self.raw_ir:
+            norm_ir.append(i - ir_mean)
+        self._rms_red = calc_rms(norm_red)
+        self._rms_ir  = calc_rms(norm_ir)
+        self._r_value = (self._rms_red / self._rms_ir)
+        self._r_value_history.append(self._r_value)
+        self._r_value_history.pop(0)
+    
+    def _calc_hr(self) -> tuple[int, int]:
+        """
+        Converts the average time between peaks to frequency.
+        Returns tuple: (instantanious_rate, average_rate)
+        """
+
+        times = []
+        if len(self._peaks) > 1:
+            for i, value in enumerate(self._peaks):
+                if i:
+                    last = self._raw_time[self._peaks[i - 1]]
+                    times.append(self._raw_time[value] - last)
+        if len(times):
+            freq = (1 / (sum(times) / len(times)))
+            rate = freq * 1000 * 60
+
+            # update heart rate history
+            self._heart_rate_history.append(rate)
+            self._heart_rate_history.pop(0)
+
+            # return instantainous rate and averaged rate
+            rate = round(rate)
+            avg = round(stat.mean(self._heart_rate_history))
+            return (rate, avg)
+        else:
+            return (0, 0)
+
+    def _detect_peaks(self) -> None:
+        vmax: int = self._raw_ir.max()
+        vmin: int = self._raw_ir.min()
+        center: float = (vmax - (vmax - vmin) / 2)
+        self._peaks = signal.find_peaks(
+                self.value_history,
+                prominence = self.pk_prominence,
+                height = center,
+                distance = self.pk_holdoff,
+            )[0]
+
+
+    def _save_cal_file(self, file_path: str) -> None:
+        """Saves calibration tables to file."""
+        logging.info(f"Saving data to save file: {file_path}")
+        save_data = {}
+        save_data["R_TABLE"] = self._cal_r
+        save_data["SPO2_TABLE"] = self._cal_spo2
+        try:
+            f = open(file_path, 'w')
+            json.dump(save_data, f)
+            f.close()
+        except PermissionError as e:
+            logging.warning(f"Could not save calibration file! \n{e}")
+
+    
+    def _load_cal_file(self, file_path: str) -> None:
+        """
+        Loads the JSON file containing the calibration table. If no file 
+        is found, load the default values and save those to the file. Updates
+        the calibration tables with the values in the file (cal_r and cal_spo2).
+        """
+
+        logging.debug(f"Loading calibration file: {file_path}")
+        try:
+            f = open(file_path, 'r')
+            data = json.load(f)
+            f.close()
+            self._cal_r = data["R_TABLE"]
+            self._cal_spo2 = data["SPO2_TABLE"]
+        except FileNotFoundError as e:
+            logging.warning(e)
+            logging.info("Loading default calibration tables.")
+            self._cal_r: list = self._default_cal_r
+            self._cal_spo2: list = self._default_cal_spo2
+            self._save_cal_file(self._cal_file_path)
+
