@@ -35,7 +35,7 @@ from spo2 import SPO2
 from resource_path import resource_path
 from spo2_window import Ui_MainWindow
 
-VERSION = "0.0.3"
+VERSION = "0.0.4"
 LOG_LEVEL = logging.DEBUG
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -82,7 +82,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.graph_padding_factor = 0.667
         self.green_pen = pg.mkPen('g', width = 2)
         self.red_pen = pg.mkPen('r', width = 2)
-        self.yellow_pen = pg.mkPen('y')
 
         # do initial comport refresh and graph clear
         self.button_capture.setDisabled(True)

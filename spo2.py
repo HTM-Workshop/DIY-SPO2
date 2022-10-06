@@ -18,7 +18,6 @@
 
 import json
 import math
-import numba
 import numpy as np
 import logging
 import statistics as stat
@@ -28,7 +27,6 @@ from scipy import signal
 from debug import debug_timer
 from resource_path import resource_path
 
-@numba.jit
 def calc_rms(list_in):
     total = 0
     for i in list_in:
@@ -162,7 +160,6 @@ class SPO2:
         self._save_cal_file(self._cal_file_path)
 
     ### Internal methods
-    @numba.jit
     def _calc_r(self) -> None:
         """
         Update the instantaneous R value and channel RMS. 

@@ -6,8 +6,7 @@ import traceback
 import logging
 
 # local imports
-from main import VERSION, LOG_LEVEL
-
+from main import VERSION
 
 def log_sys_info() -> None:
     """Logs system info."""
