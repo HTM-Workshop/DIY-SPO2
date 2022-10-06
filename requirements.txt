@@ -1,0 +1,6 @@
+numba
+numpy
+scipy
+pyqt5
+pyqtgraph
+pyserial

@@ -35,13 +35,14 @@ from spo2 import SPO2
 from resource_path import resource_path
 from spo2_window import Ui_MainWindow
 
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 LOG_LEVEL = logging.DEBUG
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
+        self.setWindowTitle(f"SPO2 Viewer - v{VERSION}")
 
         # Create SPO2 object
         self._spo2 = SPO2('cal.json', 3500)
@@ -60,7 +61,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # graph timer
         self.graph_timer = QtCore.QTimer()
         self.graph_timer.timeout.connect(self.draw_graphs)
-        self.graph_frame_rate = 15
+        self.graph_frame_rate = 30
         self.graph_timer_ms = int(1 / (self.graph_frame_rate / 1000))
 
         # serial object
