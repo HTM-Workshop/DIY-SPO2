@@ -20,14 +20,13 @@
 
 import sys
 import time
-import math
 import numpy
 import serial
 import serial.tools.list_ports
 import logging
 import pyqtgraph as pg
 from scipy.signal import savgol_filter
-from PyQt5 import QtWidgets, uic, QtCore, QtWidgets
+from PyQt5 import QtWidgets, QtCore, QtWidgets
 
 # local includes
 import log_system
@@ -36,7 +35,7 @@ from spo2 import SPO2
 from resource_path import resource_path
 from spo2_window import Ui_MainWindow
 
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 LOG_LEVEL = logging.DEBUG
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -46,9 +45,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Create SPO2 object
         self._spo2 = SPO2('cal.json', 3500)
-
-        # Load the UI Page
-        #uic.loadUi(resource_path('spo2_window.ui'), self)
 
         # latest capture
         self.current_capture: tuple = (0, 0)
@@ -64,7 +60,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # graph timer
         self.graph_timer = QtCore.QTimer()
         self.graph_timer.timeout.connect(self.draw_graphs)
-        self.graph_frame_rate = 30
+        self.graph_frame_rate = 15
         self.graph_timer_ms = int(1 / (self.graph_frame_rate / 1000))
 
         # serial object
@@ -102,6 +98,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lcd_r_avg.display(self._spo2.r_average)
             self.lcd_spo2.display(self._spo2.spo2)
             self.lcd_heart.display(self._spo2.heart_rate)
+            self.ui_statusbar_message(f"Samples per second: {self._spo2.samples_per_second}")
             self.graph.enableAutoRange()
             self.graph.disableAutoRange()
 
@@ -148,12 +145,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """
 
         if not self.ser.isOpen():
+            logging.debug("Starting connection to device.")
             if self.ser_com_connect():
                 self.button_refresh.setDisabled(True)
                 self.button_capture.setDisabled(False)
                 self.button_connect.setText("Disconnect")
                 self._spo2.reset()
         else:
+            logging.debug("Disconnecting serial device.")
             if self.capture_timer.isActive():
                 self.start_stop_toggle()
             try:

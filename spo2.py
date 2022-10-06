@@ -40,6 +40,7 @@ class SPO2:
     def __init__(self, cal_file: str, max_readings: int = 80):
 
         self._r_value_history_max = 10
+        self._samples_per_second: int = 0
 
         # peak detection parameters
         self.pk_prominence: int = 1
@@ -89,6 +90,9 @@ class SPO2:
     @property
     def max_readings(self) -> int:
         return self._max_readings
+    @property
+    def samples_per_second(self) -> int:
+        return self._samples_per_second
     
     # accessors for graph data
     @property
@@ -135,6 +139,7 @@ class SPO2:
         if self._data_index == 0:
             self._calc_r()
             self._heart_rate_inst, self._heart_rate_avg = self._calc_hr()
+            self._calc_sps()
             return True
         return False
 
@@ -204,6 +209,10 @@ class SPO2:
             return rate, avg
         else:
             return 0, 0
+    
+    def _calc_sps(self):
+        time_range = self._raw_time[-1] - self._raw_time[0]
+        self._samples_per_second = math.floor((self._max_readings / time_range) * 1000)
 
     def _detect_peaks(self) -> None:
         red_dat = signal.savgol_filter(
