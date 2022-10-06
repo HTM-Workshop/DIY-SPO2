@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1049</width>
+    <width>1129</width>
     <height>568</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1049</width>
+    <width>1129</width>
     <height>568</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1049</width>
+    <width>1129</width>
     <height>568</height>
    </size>
   </property>
@@ -255,7 +255,7 @@
    </widget>
    <widget class="QPushButton" name="button_update">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -266,7 +266,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Apply</string>
+     <string>Update</string>
     </property>
    </widget>
    <widget class="PlotWidget" name="graph_2" native="true">
@@ -274,7 +274,7 @@
      <rect>
       <x>800</x>
       <y>300</y>
-      <width>241</width>
+      <width>321</width>
       <height>231</height>
      </rect>
     </property>
@@ -297,7 +297,7 @@
      <rect>
       <x>800</x>
       <y>30</y>
-      <width>241</width>
+      <width>311</width>
       <height>192</height>
      </rect>
     </property>
@@ -324,7 +324,7 @@
    <widget class="QPushButton" name="button_add_row">
     <property name="geometry">
      <rect>
-      <x>1010</x>
+      <x>1080</x>
       <y>230</y>
       <width>31</width>
       <height>27</height>
@@ -342,10 +342,26 @@
      <string>+</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="button_reload">
+   <widget class="QPushButton" name="button_save">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>880</x>
+      <y>230</y>
+      <width>71</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_reload">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
       <y>230</y>
       <width>71</width>
       <height>27</height>

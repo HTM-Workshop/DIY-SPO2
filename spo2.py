@@ -39,11 +39,11 @@ def calc_rms(list_in):
 class SPO2:
     def __init__(self, cal_file: str, max_readings: int = 80):
 
-        self._r_value_history_max = 100
+        self._r_value_history_max = 10
 
         # peak detection parameters
-        self.pk_prominence: int = 50
-        self.pk_holdoff: int = 50
+        self.pk_prominence: int = 1
+        self.pk_holdoff: int = 500
         
         # default calibration tables
         self._default_cal_r: list = [0.4, 0.85, 0.98, 1.1, 10]
@@ -83,6 +83,12 @@ class SPO2:
     @property
     def heart_rate(self) -> float:
         return self._heart_rate_inst
+    @property
+    def heart_rate_avg(self) -> float:
+        return self._heart_rate_avg
+    @property
+    def max_readings(self) -> int:
+        return self._max_readings
     
     # accessors for graph data
     @property
@@ -114,11 +120,12 @@ class SPO2:
 
 
     ### External Methods
-    def add_data(self, data: tuple[float, float], time: float) -> None:
+    def add_data(self, data: tuple[float, float], time: float) -> bool:
         """
         Add a raw datapoint to the RED, IR, and Time tables. 
         Data tuple is defined as: tuple(red, ir). 
         Automatically updates R, SPO2, and heartrate at the end of a capture period.
+        Returns True if the end of the capture period was reached.
         """
 
         self._raw_red[self._data_index] = data[0]
@@ -127,7 +134,9 @@ class SPO2:
         self._data_index = (self._data_index + 1) % self._max_readings
         if self._data_index == 0:
             self._calc_r()
-            self._calc_hr()
+            self._heart_rate_inst, self._heart_rate_avg = self._calc_hr()
+            return True
+        return False
 
     def reset(self) -> None:
         """Resets all data storage values and calculation results."""
@@ -136,6 +145,7 @@ class SPO2:
         self._rms_ir: float = 0.0
         self._r_value: float = 0.0
         self._heart_rate_inst: float = 0.0
+        self._heart_rate_avg: float = 0.0
         self._r_value_history = [0] * self._r_value_history_max
         self._raw_red: np.ndarray = np.zeros(self._max_readings)
         self._raw_ir: np.ndarray = np.zeros(self._max_readings)
@@ -143,6 +153,8 @@ class SPO2:
         self._heart_rate_history: list = [0] * 3
         self._data_index = 0   
     
+    def save_cal(self):
+        self._save_cal_file(self._cal_file_path)
 
     ### Internal methods
     @numba.jit
@@ -152,13 +164,13 @@ class SPO2:
         Stores to R value history.
         """
 
-        red_mean = stat.mean(self.raw_red)
-        ir_mean  = stat.mean(self.raw_ir)
+        red_mean = stat.mean(self._raw_red)
+        ir_mean  = stat.mean(self._raw_ir)
         norm_red = []
         norm_ir  = []
-        for i in self.raw_red:
+        for i in self._raw_red:
             norm_red.append(i - red_mean)
-        for i in self.raw_ir:
+        for i in self._raw_ir:
             norm_ir.append(i - ir_mean)
         self._rms_red = calc_rms(norm_red)
         self._rms_ir  = calc_rms(norm_ir)
@@ -171,7 +183,7 @@ class SPO2:
         Converts the average time between peaks to frequency.
         Returns tuple: (instantanious_rate, average_rate)
         """
-
+        self._detect_peaks()
         times = []
         if len(self._peaks) > 1:
             for i, value in enumerate(self._peaks):
@@ -189,20 +201,27 @@ class SPO2:
             # return instantainous rate and averaged rate
             rate = round(rate)
             avg = round(stat.mean(self._heart_rate_history))
-            return (rate, avg)
+            return rate, avg
         else:
-            return (0, 0)
+            return 0, 0
 
     def _detect_peaks(self) -> None:
-        vmax: int = self._raw_ir.max()
-        vmin: int = self._raw_ir.min()
+        red_dat = signal.savgol_filter(
+            self.history_red,
+            window_length = 199,
+            polyorder = 5,
+            mode = 'interp',
+            )[25:self.max_readings - 25]
+        vmax: int = max(red_dat)
+        vmin: int = min(red_dat)
         center: float = (vmax - (vmax - vmin) / 2)
         self._peaks = signal.find_peaks(
-                self.value_history,
+                red_dat,
                 prominence = self.pk_prominence,
                 height = center,
                 distance = self.pk_holdoff,
             )[0]
+        print(self._peaks)
 
 
     def _save_cal_file(self, file_path: str) -> None:
