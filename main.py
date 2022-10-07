@@ -26,7 +26,9 @@ import serial.tools.list_ports
 import logging
 import pyqtgraph as pg
 from scipy.signal import savgol_filter
-from PyQt5 import QtWidgets, QtCore, QtWidgets
+from PyQt5 import QtWidgets, QtCore, QtWidgets, QtGui
+from webbrowser import Error as wb_error
+from webbrowser import open as wb_open
 
 # local includes
 import log_system
@@ -34,15 +36,25 @@ import debug
 from spo2 import SPO2
 from resource_path import resource_path
 from spo2_window import Ui_MainWindow
+from license import Ui_license_window
 
-VERSION = "0.0.4"
+VERSION = "0.0.5"
 LOG_LEVEL = logging.DEBUG
+
+# Same for license window
+class LicenseWindow(QtWidgets.QDialog, Ui_license_window):
+    """License dialog box window."""
+    def __init__(self, *args, **kwargs):
+        super(LicenseWindow, self).__init__(*args, **kwargs)
+        self.setupUi(self)
+        self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self.setWindowTitle(f"SPO2 Viewer - v{VERSION}")
+        self.license_window = LicenseWindow()
 
         # Create SPO2 object
         self._spo2 = SPO2('cal.json', 3500)
@@ -74,7 +86,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.button_update.clicked.connect(self.read_calb_table)
         self.button_reload.clicked.connect(self.update_calb)
         self.button_add_row.clicked.connect(self.add_row)
-        #self.button_save.clicked.connect(self._callback_placeholder)
+        self.actionLicense.triggered.connect(self.ui_show_license)  
+        self.actionQuit.triggered.connect(sys.exit)
+        self.actionGet_Source_Code.triggered.connect(self.open_source_code_webpage)
 
         # graph properties
         self.graph.disableAutoRange()
@@ -316,6 +330,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         error_message.setText(str(msg))
         error_message.exec_()
 
+    def ui_show_license(self):
+        """Shows the License dialog window"""
+        self.license_window.show()
+
     def update_calb(self):
         
         # plot data: x, y values
@@ -355,6 +373,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.update_calb()
         self._spo2.save_cal()
 
+    def open_source_code_webpage(self):
+        """
+        Opens a link to the project source code.
+        """
+        try:
+            wb_open("https://github.com/HTM-Workshop/DIY-SPO2", autoraise = True)
+        except wb_error as error:
+            error_msg = "Could not open URL.\n\n" + error
+            logging.warning(error_msg)
+            self.ui_display_error_message("Open URL Error", error_msg)
 
 def main():
     log_system.init_logging(LOG_LEVEL)
