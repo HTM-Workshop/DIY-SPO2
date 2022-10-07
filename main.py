@@ -152,10 +152,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if not self.capture_timer.isActive():
             self.capture_timer.start(self.capture_rate_ms)
             self.graph_timer.start(self.graph_timer_ms)
+            self.button_capture.setText("Stop Capture")
             logging.debug("CAPTURE START")
         else:
             self.capture_timer.stop()
             self.graph_timer.stop()
+            self.button_capture.setText("Start Capture")
             logging.debug("CAPTURE STOP")
 
     def connect_toggle(self) -> None:

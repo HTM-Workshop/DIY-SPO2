@@ -237,7 +237,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Capture</string>
+     <string>Start Capture</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">

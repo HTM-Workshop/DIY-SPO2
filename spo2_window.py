@@ -173,7 +173,7 @@ class Ui_MainWindow(object):
         self.button_refresh.setText(_translate("MainWindow", "Refresh"))
         self.button_connect.setText(_translate("MainWindow", "Connect"))
         self.label_10.setText(_translate("MainWindow", "Device:"))
-        self.button_capture.setText(_translate("MainWindow", "Capture"))
+        self.button_capture.setText(_translate("MainWindow", "Start Capture"))
         self.label_5.setText(_translate("MainWindow", "SPO2/R Calibration Coefficients"))
         self.button_update.setText(_translate("MainWindow", "Apply"))
         self.label_6.setText(_translate("MainWindow", "SPO2/R Calibration Curve"))
