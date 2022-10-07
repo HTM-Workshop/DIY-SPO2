@@ -45,7 +45,7 @@ from resource_path import resource_path
 from spo2_window import Ui_MainWindow
 from license import Ui_license_window
 
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 LOG_LEVEL = logging.INFO
 
 # Same for license window
