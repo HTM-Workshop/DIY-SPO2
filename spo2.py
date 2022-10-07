@@ -227,8 +227,6 @@ class SPO2:
                 height = center,
                 distance = self.pk_holdoff,
             )[0]
-        print(self._peaks)
-
 
     def _save_cal_file(self, file_path: str) -> None:
         """Saves calibration tables to file."""
