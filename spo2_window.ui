@@ -275,7 +275,7 @@
       <x>800</x>
       <y>300</y>
       <width>241</width>
-      <height>231</height>
+      <height>161</height>
      </rect>
     </property>
    </widget>
@@ -289,7 +289,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>SPO2/R Curve</string>
+     <string>SPO2/R Calibration Curve</string>
     </property>
    </widget>
    <widget class="QTableWidget" name="tableWidget">
@@ -353,6 +353,31 @@
     </property>
     <property name="text">
      <string>Reload</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>470</y>
+      <width>241</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+      <kerning>true</kerning>
+     </font>
+    </property>
+    <property name="text">
+     <string>NOT FOR
+MEDICAL USE</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>
