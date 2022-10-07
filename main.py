@@ -37,6 +37,7 @@ from pyqtgraph.imageview.ImageViewTemplate_pyqt5 import *
 from pyqtgraph.console.template_pyqt5 import *
 
 # local includes
+import images_qr
 import log_system
 import debug
 from spo2 import SPO2
@@ -60,7 +61,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self.setWindowTitle(f"SPO2 Viewer - v{VERSION}")
-        self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
+        self.setWindowIcon(QtGui.QIcon(resource_path(':/icon/icon.png')))
         self.license_window = LicenseWindow()
 
         # Create SPO2 object
