@@ -10,3 +10,14 @@ build-ui:
 	pyuic5 license.ui > license.py
 build-icon:
 	pyrcc5 -o images_qr.py images.qrc
+clean:
+	rm -rf build
+	rm -rf __pycache__
+	rm -f *.bin
+	rm -f *csv
+	rm -rf .mypy_cache
+clean-all:
+	rm -f *.spec
+	make clean
+	rm -rf dist
+
