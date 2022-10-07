@@ -60,6 +60,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self.setWindowTitle(f"SPO2 Viewer - v{VERSION}")
+        self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
         self.license_window = LicenseWindow()
 
         # Create SPO2 object
