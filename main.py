@@ -354,6 +354,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def add_row(self):
         self.tableWidget.setRowCount(self.tableWidget.rowCount() + 1)
+        self.tableWidget.setCurrentCell(self.tableWidget.rowCount() - 1, 0)
+        self.tableWidget.scrollToBottom()
 
     def read_calb_table(self):
         self.tableWidget.sortItems(0)
