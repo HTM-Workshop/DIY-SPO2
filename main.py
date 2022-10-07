@@ -45,7 +45,7 @@ from resource_path import resource_path
 from spo2_window import Ui_MainWindow
 from license import Ui_license_window
 
-VERSION = "0.0.5"
+VERSION = "0.0.6"
 LOG_LEVEL = logging.DEBUG
 
 # Same for license window
@@ -61,7 +61,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self.setWindowTitle(f"SPO2 Viewer - v{VERSION}")
-        self.setWindowIcon(QtGui.QIcon(resource_path(':/icon/icon.png')))
+        self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
         self.license_window = LicenseWindow()
 
         # Create SPO2 object
