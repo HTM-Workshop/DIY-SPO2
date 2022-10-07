@@ -30,6 +30,12 @@ from PyQt5 import QtWidgets, QtCore, QtWidgets, QtGui
 from webbrowser import Error as wb_error
 from webbrowser import open as wb_open
 
+# manual includes to fix occasional compile problem
+from pyqtgraph.graphicsItems.ViewBox.axisCtrlTemplate_pyqt5 import *
+from pyqtgraph.graphicsItems.PlotItem.plotConfigTemplate_pyqt5 import *
+from pyqtgraph.imageview.ImageViewTemplate_pyqt5 import *
+from pyqtgraph.console.template_pyqt5 import *
+
 # local includes
 import log_system
 import debug
