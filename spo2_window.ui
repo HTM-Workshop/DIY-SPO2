@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1049</width>
-    <height>582</height>
+    <height>593</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -474,7 +474,22 @@
     <addaction name="actionGet_Source_Code"/>
     <addaction name="actionLicense"/>
    </widget>
+   <widget class="QMenu" name="menuGraph">
+    <property name="title">
+     <string>Graph</string>
+    </property>
+    <widget class="QMenu" name="menuRefresh_Rate">
+     <property name="title">
+      <string>Refresh Rate</string>
+     </property>
+     <addaction name="action30_FPS"/>
+     <addaction name="action15_FPS"/>
+     <addaction name="action8_FPS"/>
+    </widget>
+    <addaction name="menuRefresh_Rate"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuGraph"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionQuit">
@@ -497,6 +512,38 @@
     <string>License</string>
    </property>
   </action>
+    <actiongroup name="FPSGroup">
+   <action name="action30_FPS">
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string>30 FPS</string>
+    </property>
+   </action>
+   <action name="action15_FPS">
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+    <property name="text">
+     <string>15 FPS</string>
+    </property>
+   </action>
+   <action name="action8_FPS">
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string>8 FPS</string>
+    </property>
+   </action>
+  </actiongroup>
  </widget>
  <customwidgets>
   <customwidget>

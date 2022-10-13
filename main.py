@@ -45,7 +45,7 @@ from resource_path import resource_path
 from spo2_window import Ui_MainWindow
 from license import Ui_license_window
 
-VERSION = "1.0.2"
+VERSION = "1.1.0"
 LOG_LEVEL = logging.INFO
 
 # Same for license window
@@ -87,6 +87,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # serial object
         self.ser: serial.Serial = serial.Serial(baudrate = 115200, timeout = 1, write_timeout = 1)
 
+        # set FPS menu option metadata
+        self.action30_FPS.setData(30)
+        self.action15_FPS.setData(15)
+        self.action8_FPS.setData(8)
+
         # connect buttons to methods
         self.button_refresh.clicked.connect(self.ser_com_refresh)
         self.button_connect.clicked.connect(self.connect_toggle)
@@ -97,6 +102,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionLicense.triggered.connect(self.ui_show_license)  
         self.actionQuit.triggered.connect(sys.exit)
         self.actionGet_Source_Code.triggered.connect(self.open_source_code_webpage)
+        self.FPSGroup.triggered.connect(self.graph_restart_timer)
 
         # graph properties
         self.graph.disableAutoRange()
@@ -343,6 +349,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def ui_show_license(self):
         """Shows the License dialog window"""
         self.license_window.show()
+
+    def graph_restart_timer(self):
+        """
+        Updates the refresh rate timings for the graph drawing routine. If the
+        timer is running, the timer will stop and restart with the new timing.
+        This will not start the timer if the timer wasn't running when called. 
+        """
+        self.graph_frame_rate = self.FPSGroup.checkedAction().data()
+        self.graph_timer_ms = int(1 / (self.graph_frame_rate / 1000))
+        if self.graph_timer.isActive():
+            self.graph_timer.stop()
+            self.graph_timer.start(self.graph_timer_ms)
 
     def update_calb(self):
         
