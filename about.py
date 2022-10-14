@@ -47,7 +47,7 @@ class Ui_about_window(object):
     def retranslateUi(self, about_window):
         _translate = QtCore.QCoreApplication.translate
         about_window.setWindowTitle(_translate("about_window", "About"))
-        self.title.setText(_translate("about_window", "ECG Viewer"))
+        self.title.setText(_translate("about_window", "SPO2 Viewer"))
         self.version.setText(_translate("about_window", "VERSION PLACEHOLDER + BUILD DATE"))
         self.textBrowser.setHtml(_translate("about_window", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -56,7 +56,7 @@ class Ui_about_window(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Written by Kevin Williams - 2022</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">WARNING</span>: This program was designed for educational purposes only. This program was not designed or tested for medical purposes and data obtained from this program MUST NOT be used to make medical decisions or diagnosises.</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /><span style=\" background-color:transparent;\">DIYSPO2 is intended to interface with the DIYSPO2 sensor. It aims to interpret a SPO2 signal and heart rate from the user. The default calibration table may not be accurate. The calibration table is intended to be built and checked against a calibrated SPO2 sensor to achieve accurate R/SPO2 results.</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /><span style=\" background-color:transparent;\">SPO2 Viewer is intended to interface with the DIYSPO2 sensor. It aims to interpret a SPO2 signal and heart rate from the user. The default calibration table may not be accurate. The calibration table is intended to be built and checked against a calibrated SPO2 sensor to achieve accurate R/SPO2 results.</span></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This program is FREE and OPEN SOURCE licensed under GNU GPLv2.</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))

@@ -61,7 +61,7 @@
     </font>
    </property>
    <property name="text">
-    <string>ECG Viewer</string>
+    <string>SPO2 Viewer</string>
    </property>
   </widget>
   <widget class="QLabel" name="version">
@@ -103,7 +103,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Written by Kevin Williams - 2022&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;WARNING&lt;/span&gt;: This program was designed for educational purposes only. This program was not designed or tested for medical purposes and data obtained from this program MUST NOT be used to make medical decisions or diagnosises.&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;span style=&quot; background-color:transparent;&quot;&gt;DIYSPO2 is intended to interface with the DIYSPO2 sensor. It aims to interpret a SPO2 signal and heart rate from the user. The default calibration table may not be accurate. The calibration table is intended to be built and checked against a calibrated SPO2 sensor to achieve accurate R/SPO2 results.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;span style=&quot; background-color:transparent;&quot;&gt;SPO2 Viewer is intended to interface with the DIYSPO2 sensor. It aims to interpret a SPO2 signal and heart rate from the user. The default calibration table may not be accurate. The calibration table is intended to be built and checked against a calibrated SPO2 sensor to achieve accurate R/SPO2 results.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This program is FREE and OPEN SOURCE licensed under GNU GPLv2.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
