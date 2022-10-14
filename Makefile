@@ -20,4 +20,7 @@ clean-all:
 	rm -f *.spec
 	make clean
 	rm -rf dist
-
+build-linux:
+	make install-reqs
+	pip3 install pyinstaller --user
+	pyinstaller --clean --window --name="SPO2 Viewer" --icon=icon/icon.png --onefile main.py
