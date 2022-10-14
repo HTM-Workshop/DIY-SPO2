@@ -7,6 +7,7 @@ install-reqs:
 	pip3 install -r requirements.txt --user
 build-ui:
 	pyuic5 spo2_window.ui > spo2_window.py
+	pyuic5 about.ui > about.py
 	pyuic5 license.ui > license.py
 build-icon:
 	pyrcc5 -o images_qr.py images.qrc

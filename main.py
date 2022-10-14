@@ -44,9 +44,24 @@ from spo2 import SPO2
 from resource_path import resource_path
 from spo2_window import Ui_MainWindow
 from license import Ui_license_window
+from about import Ui_about_window
 
 VERSION = "1.1.0"
 LOG_LEVEL = logging.INFO
+
+# About window. The class is so tiny it might as well be defined here.
+class AboutWindow(QtWidgets.QDialog, Ui_about_window):
+    """
+    About dialog box window.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(AboutWindow, self).__init__(*args, **kwargs)
+        self.setupUi(self)
+        self.version.setText(VERSION)
+        self.icon.setPixmap(QtGui.QPixmap(":/icon/icon.png"))
+        self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
+
 
 # Same for license window
 class LicenseWindow(QtWidgets.QDialog, Ui_license_window):
@@ -63,6 +78,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setWindowTitle(f"SPO2 Viewer - v{VERSION}")
         self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
         self.license_window = LicenseWindow()
+        self.about_window = AboutWindow()
 
         # Create SPO2 object
         self._spo2 = SPO2('cal.json', 3500)
@@ -103,6 +119,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionQuit.triggered.connect(sys.exit)
         self.actionGet_Source_Code.triggered.connect(self.open_source_code_webpage)
         self.FPSGroup.triggered.connect(self.graph_restart_timer)
+        self.actionAbout_2.triggered.connect(self.ui_show_about)
 
         # graph properties
         self.graph.disableAutoRange()
@@ -349,6 +366,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def ui_show_license(self):
         """Shows the License dialog window"""
         self.license_window.show()
+    
+    def ui_show_about(self):
+        """Shows the About dialog window."""
+        self.about_window.show()
 
     def graph_restart_timer(self):
         """

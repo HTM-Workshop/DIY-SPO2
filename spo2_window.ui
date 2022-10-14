@@ -471,8 +471,10 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionGet_Source_Code"/>
+    <addaction name="actionAbout_2"/>
     <addaction name="actionLicense"/>
+    <addaction name="separator"/>
+    <addaction name="actionGet_Source_Code"/>
    </widget>
    <widget class="QMenu" name="menuGraph">
     <property name="title">
@@ -487,6 +489,7 @@
      <addaction name="action8_FPS"/>
     </widget>
     <addaction name="menuRefresh_Rate"/>
+    <addaction name="actionBold_Line"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuGraph"/>
@@ -512,7 +515,23 @@
     <string>License</string>
    </property>
   </action>
-    <actiongroup name="FPSGroup">
+  <action name="actionBold_Line">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Bold Line</string>
+   </property>
+  </action>
+  <action name="actionAbout_2">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <actiongroup name="FPSGroup">
    <action name="action30_FPS">
     <property name="checkable">
      <bool>true</bool>
