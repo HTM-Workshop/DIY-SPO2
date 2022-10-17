@@ -49,7 +49,7 @@ from spo2_window import Ui_MainWindow
 from license import Ui_license_window
 from about import Ui_about_window
 
-VERSION = "1.1.1"
+VERSION = "1.2.0"
 LOG_LEVEL = logging.INFO
 
 # About window. The class is so tiny it might as well be defined here.
@@ -122,6 +122,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionGet_Source_Code.triggered.connect(self.open_source_code_webpage)
         self.FPSGroup.triggered.connect(self.graph_restart_timer)
         self.actionAbout_2.triggered.connect(self.ui_show_about)
+        self.actionBold_Line.triggered.connect(self.bold_line)
 
         # graph properties
         self.graph.disableAutoRange()
@@ -436,6 +437,21 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             error_msg = "Could not open URL.\n\n" + error
             logging.warning(error_msg)
             self.ui_display_error_message("Open URL Error", error_msg)
+    
+    def bold_line(self):
+        """
+        Enables/disables the bold line on the graph. Turning the bold line off
+        can help improve performance on older machines
+        """
+
+        if self.actionBold_Line.isChecked():
+            self.green_pen = pg.mkPen('g', width = 2)
+            self.red_pen = pg.mkPen('r', width = 2)
+        else:
+            self.green_pen = pg.mkPen('g')
+            self.red_pen = pg.mkPen('r')
+        self.graph_reset()
+
 
 def main():
     log_system.init_logging(LOG_LEVEL)
