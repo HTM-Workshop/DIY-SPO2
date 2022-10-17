@@ -31,10 +31,13 @@ from webbrowser import Error as wb_error
 from webbrowser import open as wb_open
 
 # manual includes to fix occasional compile problem
-from pyqtgraph.graphicsItems.ViewBox.axisCtrlTemplate_pyqt5 import *
-from pyqtgraph.graphicsItems.PlotItem.plotConfigTemplate_pyqt5 import *
-from pyqtgraph.imageview.ImageViewTemplate_pyqt5 import *
-from pyqtgraph.console.template_pyqt5 import *
+try:
+    from pyqtgraph.graphicsItems.ViewBox.axisCtrlTemplate_pyqt5 import *
+    from pyqtgraph.graphicsItems.PlotItem.plotConfigTemplate_pyqt5 import *
+    from pyqtgraph.imageview.ImageViewTemplate_pyqt5 import *
+    from pyqtgraph.console.template_pyqt5 import *
+except Exception as e:
+    logging.warning(f"{e}")
 
 # local includes
 import images_qr
@@ -46,14 +49,12 @@ from spo2_window import Ui_MainWindow
 from license import Ui_license_window
 from about import Ui_about_window
 
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 LOG_LEVEL = logging.INFO
 
 # About window. The class is so tiny it might as well be defined here.
 class AboutWindow(QtWidgets.QDialog, Ui_about_window):
-    """
-    About dialog box window.
-    """
+    """About dialog box window."""
 
     def __init__(self, *args, **kwargs):
         super(AboutWindow, self).__init__(*args, **kwargs)
@@ -70,6 +71,7 @@ class LicenseWindow(QtWidgets.QDialog, Ui_license_window):
         super(LicenseWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
+
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
